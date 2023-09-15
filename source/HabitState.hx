@@ -26,7 +26,7 @@ import flixel.addons.plugin.FlxMouseControl;
 import kiss_flixel.KissInputText;
 import kiss.Prelude;
 import kiss.List;
-import kiss_tools.FlxKeyShortcutHandler;
+import kiss_flixel.FlxKeyShortcutHandler;
 import HabitModel;
 import sys.FileSystem;
 import hx.strings.Strings;
