@@ -29,7 +29,8 @@
         packs))
 
 (function :Puzzle firstUnsolvedPuzzle [:HabitModel model :String dir]
-    (let [images (FileSystem.readDirectory dir)
+    (let [images (filter (FileSystem.readDirectory dir)
+                        ->file !(file.endsWith ".tsv"))
             &mut puzzleCount images.length
             rewardFilePaths (for rf model.rewardFiles rf.path)]
         (doFor [idx image] (enumerate images)
