@@ -1,5 +1,0 @@
--lib kiss
--lib datetime
--cp src
---main kiss_spaced_rep.Main
---interp
