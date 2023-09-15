@@ -670,17 +670,7 @@
 
                         (rewardSprites.add s))))
             
-            (prop &mut :FlxBar bar null)
-            (prop &mut :FlxAsyncLoop asyncLoop null)
-            (set bar (new FlxBar 0 0 LEFT_TO_RIGHT (iThird FlxG.width) SimpleWindow.textSize rewardSprites "length" 0 piecesUnlocked true))
-            (set bar.cameras [uiCamera])
-            (set asyncLoop (new FlxAsyncLoop newPieces makeJig 1))
-            (bar.createColoredEmptyBar (FlxColor.LIME.getDarkened) true FlxColor.LIME)
-            (bar.createColoredFilledBar FlxColor.LIME false)
-            (bar.screenCenter)
-            (set bar.filledCallback ->:Void {
-                (remove bar)
-                (remove asyncLoop)
+            (localFunction addImportantThings []
                 (rewardSprites.revive)
                 (doFor row (range PUZZLE_HEIGHT)
                     (doFor col (range PUZZLE_WIDTH)
@@ -703,15 +693,32 @@
                 (pieceCamera.calculateScrollBounds rewardSprites uiCamera SCROLL_BOUND_MARGIN)
                 (when save.data.zoom
                     (set pieceCamera.zoom save.data.zoom)
-                    (set pieceCamera.scroll save.data.scroll))
-                (set bar null)
-                (set asyncLoop null)
-            })
-            (add bar)
-            (add asyncLoop)
-            
-            
-            (asyncLoop.start)))
+                    (set pieceCamera.scroll save.data.scroll)))
+            (cond
+                // Pieces exist, so a loading bar is required:
+                ((< 0 newPieces)
+                    (prop &mut :FlxBar bar null)
+                    (prop &mut :FlxAsyncLoop asyncLoop null)
+                    (set bar (new FlxBar 0 0 LEFT_TO_RIGHT (iThird FlxG.width) SimpleWindow.textSize rewardSprites "length" 0 piecesUnlocked true))
+                    (set bar.cameras [uiCamera])
+                    (set asyncLoop (new FlxAsyncLoop newPieces makeJig 1))
+                    (bar.createColoredEmptyBar (FlxColor.LIME.getDarkened) true FlxColor.LIME)
+                    (bar.createColoredFilledBar FlxColor.LIME false)
+                    (bar.screenCenter)
+                    (set bar.filledCallback ->:Void {
+                        (remove bar)
+                        (remove asyncLoop)
+                        (addImportantThings)
+                        (set bar null)
+                        (set asyncLoop null)
+                    })
+                    (add bar)
+                    (add asyncLoop)
+                    (asyncLoop.start))
+
+                // No pieces exist, so nothing to load:
+                (true
+                    (addImportantThings)))))
     (set lastRewardFileIndex rewardFileIndex)
     (prop &mut lastTotalPoints -1)
     (set lastTotalPoints (m.totalPoints))
