@@ -10,13 +10,12 @@
 (prop &mut :FlxText availableMatchesText (new FlxText 0 0 0 "" SimpleWindow.textSize))
 
 (method &override :Void create [] 
+    (kiss_flixel.Log.use)
     (#when debug
         (kiss_flixel.DebugTools.f2ToLogSprites))
 
     (set FlxG.sound.soundTrayEnabled false)
     (set FlxG.autoPause false)
-    (add logTexts)
-    (set Prelude.printStr log)
     (defAndCall method newPieceCamera
         (if pieceCamera
                 {
@@ -732,21 +731,6 @@
 // TODO configurable text size
 (method _makeText [:String s :Int points &opt :Action action]
     (entryWindow.makeText (+ s (HabitModel.pointsStr points)) action))
-
-(method :Void log [:String message]
-    (trace message)
-    (when (> message.length (defAndReturn var FLX_LOG_MAX 100)) (set message (message.substr FLX_LOG_MAX)))
-    (prop &mut logTextY 0)
-    (#when debug
-        (when (> logTextY FlxG.height)
-            (logTexts.clear)
-            (set logTextY 0))
-        (let [text (new FlxText FlxG.width logTextY 0 message textSize)]
-            (set text.color FlxColor.LIME)
-            (set text.cameras [uiCamera])
-            (+= logTextY text.height)
-            (-= text.x text.width)
-            (logTexts.add text))))
 
 (method :FlxRect matchZone [:KissExtendedSprite s compass]
     (assertLet [id (dictGet indexMap s)
