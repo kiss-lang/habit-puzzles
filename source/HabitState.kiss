@@ -965,10 +965,12 @@
             ,@body)))
 
 (method countAvailableMatches []
-    (iHalf
-        (apply +
-            (withConnectedAndMatching for
-                (- matchingPieces.length connectedPieces.length)))))
+    (if rewardSprites
+            (iHalf
+                (apply +
+                    (withConnectedAndMatching for
+                        (- matchingPieces.length connectedPieces.length))))
+        0))
 
 (method :Array<Array<KissExtendedSprite>> listAvailableMatches []
     (apply concat (the Array<Array<Array<KissExtendedSprite>>> (withConnectedAndMatching for
