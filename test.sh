@@ -1,3 +1,3 @@
 #! /bin/bash
 
-lix run lime build cpp
+lix run lime test cpp -debug
