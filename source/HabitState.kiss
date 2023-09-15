@@ -10,6 +10,9 @@
 (prop &mut :FlxText availableMatchesText (new FlxText 0 0 0 "" SimpleWindow.textSize))
 
 (method &override :Void create [] 
+    (#when debug
+        (kiss_flixel.DebugTools.f2ToLogSprites))
+
     (set FlxG.sound.soundTrayEnabled false)
     (set FlxG.autoPause false)
     (add logTexts)
