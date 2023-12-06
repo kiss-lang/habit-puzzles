@@ -593,7 +593,7 @@
                         jig (nth jigsaw.jigs i)
                         pos (ifLet [point (dictGet (the Map<Int,FlxPoint> save.data.storedPositions) i)]
                                     point
-                                (.addPoint (nth startingPoints i) camera.scroll))
+                                (.addPoint (nth startingPoints i) (new FlxPoint camera.viewLeft camera.viewTop)))
                         angle (ifLet [angle (dictGet (the Map<Int,Float> save.data.storedAngles) i)]
                                     angle
                                 (nth startingAngles i))
