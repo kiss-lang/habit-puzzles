@@ -3,9 +3,13 @@
             &prop :Int puzzlesDone
             &prop :Int puzzlesTotal])
 
-(var puzzleSearchGlobs ["puzzles"])
-// TODO add the itch io client folder to search paths- it's
-// C:\Users\$(userHome)\AppData\Roaming\itch\apps\ on windows
+(var puzzleSearchGlobs [
+    (#if debug
+            "$(userHome)/repos/habit-puzzles/puzzles"
+        "puzzles")
+])
+// TODO add the itch io client folder to search paths BECAUSE expansions could eventually be placed in it-
+// $(userHome)\AppData\Roaming\itch\apps\ on windows
 
 (function _glob [pattern]
     // TODO implement my own "glob" to avoid haxe-concurrency dependency
