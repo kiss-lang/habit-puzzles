@@ -22,12 +22,12 @@
                 (let [packDirs (filter (for thing (FileSystem.readDirectory dir) (let [full "${dir}/${thing}"] (when (FileSystem.isDirectory full) full))))]
                     (doFor packDir packDirs
                         (let [fop (firstUnsolvedPuzzle model packDir)]
-                            (packs.push 
+                            (packs.push
                                 (new PuzzlePack
-                                    packDir 
-                                    (if fop.path 
-                                            (Some fop) 
-                                        None) 
+                                    packDir
+                                    (if fop.path
+                                            (Some fop)
+                                        None)
                                     fop.index
                                     fop.outOf)))))))
         packs))

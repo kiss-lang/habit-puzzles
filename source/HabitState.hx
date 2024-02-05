@@ -59,9 +59,9 @@ class HabitState extends FlxState {
         var points = [for (point in jig.getPoints()) new FlxPoint(point.x / scale + ROT_PADDING, point.y / scale + ROT_PADDING)];
         points.push(points[0]);
         FlxSpriteUtil.drawPolygon(
-            surface, 
+            surface,
             points,
-            fillColor, 
+            fillColor,
             {
                 thickness: 1,
                 color: outlineColor
