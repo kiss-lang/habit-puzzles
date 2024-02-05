@@ -2,6 +2,7 @@
 
 (prop &mut :Jigsawx jigsaw)
 (prop &mut :FlxCamera pieceCamera)
+(prop &mut :kiss_flixel.shaders.CheckerBoard checkerShader null)
 (prop &mut :FlxCamera uiCamera)
 
 (defAlias &ident textSize SimpleWindow.textSize)
@@ -14,6 +15,18 @@
     (#when debug
         (kiss_flixel.DebugTools.f2ToLogSprites))
 
+    (set backgroundOptions [])
+    (backgroundOptions.push FlxColor.BLACK)
+    (backgroundOptions.push FlxColor.WHITE)
+    (backgroundOptions.push FlxColor.GRAY)
+
+    (prop checkerDiff 0.2)
+    (set backgroundOptionCheckers [])
+    (backgroundOptionCheckers.push (FlxColor.fromRGBFloat checkerDiff checkerDiff checkerDiff))
+    (backgroundOptionCheckers.push (FlxColor.WHITE.getDarkened checkerDiff))
+    (backgroundOptionCheckers.push (FlxColor.GRAY.getLightened checkerDiff))
+
+
     (set FlxG.sound.soundTrayEnabled false)
     (set FlxG.autoPause false)
     (defAndCall method newPieceCamera
@@ -24,6 +37,13 @@
                     (FlxG.cameras.add pieceCamera)
                 }   
             (set pieceCamera FlxG.camera))
+        (set pieceCamera.bgColor FlxColor.TRANSPARENT)
+        (set checkerShader (new kiss_flixel.shaders.CheckerBoard pieceCamera))
+        (set checkerShader.data.checkSize.value [64.0])
+        (let [:BitmapFilter filter (new ShaderFilter checkerShader)
+            :Array<BitmapFilter> filters [filter]]
+            (pieceCamera.setFilters filters))
+
         (set FlxG.camera pieceCamera)
         (when debugLayer
             (set debugLayer.cameras [pieceCamera]))
@@ -43,6 +63,12 @@
     (set pomTimer (new FlxPomTimer))
     (set pomTimer.cameras [uiCamera])
     (super.create))
+
+(method updateBgColor []
+    (let [color1 (nth backgroundOptions save.data.backgroundIndex)
+            color2 (nth backgroundOptionCheckers save.data.backgroundIndex)]
+        (set checkerShader.data.color1.value ~[color1.redFloat color1.greenFloat color1.blueFloat 1.0])
+        (set checkerShader.data.color2.value ~[color2.redFloat color2.greenFloat color2.blueFloat 1.0])))
 
 (defAlias &ident KEYBOARD_SCROLL_SPEED (keyboardScrollSpeed))
 (method keyboardScrollSpeed []
@@ -484,11 +510,8 @@
 
 (prop &mut textY 0)
 
-(prop :Array<FlxColor> backgroundOptions [
-    FlxColor.BLACK
-    FlxColor.WHITE
-    FlxColor.GRAY
-])
+(prop &mut :Array<FlxColor> backgroundOptions [ ])
+(prop &mut :Array<FlxColor> backgroundOptionCheckers [ ])
 
 (function nameForSave [:String name]
     (doFor forbiddenChar (.split #"~%&\;:"',<>?# "# "")
@@ -498,6 +521,7 @@
 (method makeRewardSprites [m p currentRewardFile]
     (set save (new FlxSave))
     (assert (save.bind (nameForSave currentRewardFile.path)) "failed to bind save data")
+    (updateBgColor)
     (unless save.data.storedPositions
         (set save.data.storedPositions (new Map<Int,FlxPoint>)))
     (unless save.data.storedAngles
@@ -512,7 +536,7 @@
         (unless (= lastRewardFileIndex rewardFileIndex)
             // Make a new camera so scroll from the last puzzle doesn't start the camera out of boundS
             (newPieceCamera)
-            (set pieceCamera.bgColor (nth backgroundOptions save.data.backgroundIndex))
+            (updateBgColor)
             (set rewardSprite
                 (new FlxSprite 0 0
                     (BitmapData.fromFile
@@ -723,7 +747,7 @@
     (prop &mut lastTotalPoints -1)
     (set lastTotalPoints (m.totalPoints))
 
-    (set pieceCamera.bgColor (nth backgroundOptions save.data.backgroundIndex))
+    (updateBgColor)
 
     (save.flush))
 

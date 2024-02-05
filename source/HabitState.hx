@@ -46,6 +46,8 @@ import jigsawx.math.Vec2;
 import kiss_flixel.DragToSelectPlugin;
 import re_flex.R;
 import FlxPomTimer;
+import openfl.filters.BitmapFilter;
+import openfl.filters.ShaderFilter;
 
 typedef StartPuzzleFunc = (Int, Int) -> Void;
 
