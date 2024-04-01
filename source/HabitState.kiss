@@ -67,8 +67,8 @@
 (method updateBgColor []
     (let [color1 (nth backgroundOptions save.data.backgroundIndex)
             color2 (nth backgroundOptionCheckers save.data.backgroundIndex)]
-        (set checkerShader.data.color1.value ~[color1.redFloat color1.greenFloat color1.blueFloat 1.0])
-        (set checkerShader.data.color2.value ~[color2.redFloat color2.greenFloat color2.blueFloat 1.0])))
+        (set checkerShader.color1FlxColor color1)
+        (set checkerShader.color2FlxColor color2)))
 
 (defAlias &ident KEYBOARD_SCROLL_SPEED (keyboardScrollSpeed))
 (method keyboardScrollSpeed []
